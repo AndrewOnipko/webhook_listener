@@ -1,7 +1,8 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, render_template
 from app.services.email_service import EmailService
 from app.handlers.push_event_handler import PushEventHandler
 from app.logger import simple_logger
+from app.models import PushEvent
 
 webhook_bp = Blueprint("webhook", __name__)
 
@@ -24,3 +25,10 @@ def push_webhook():
         handler.handle(payload)
 
     return jsonify({"status": "ok"})
+
+
+@simple_logger
+@webhook_bp.route("/dashboard", methods=["GET"])
+def dashboard():
+    commits = PushEvent.query.order_by(PushEvent.timestamp.desc()).all()
+    return render_template("dashboard.html", commits=commits)
