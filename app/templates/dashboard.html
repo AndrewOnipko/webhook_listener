@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Последние коммиты{% endblock %}
+
+{% block content %}
+<h2>Последние коммиты</h2>
+<div class="commit-list">
+    {% for commit in commits %}
+    <div class="commit-card">
+        <div class="commit-header">
+            <span>{{ commit.repository }}</span>
+            <span>{{ commit.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</span>
+        </div>
+        <div class="commit-message">{{ commit.message }}</div>
+        <a class="commit-link" href="{{ commit.url }}" target="_blank">Перейти к коммиту</a>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
