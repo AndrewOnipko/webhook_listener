@@ -11,4 +11,4 @@ class Config:
 
     SQLALCHEMY_DATABASE_URI = f"sqlite:///{os.path.join(basedir, 'instance', 'webhook.db')}"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    #Строка для проверки коммита
+    #Строка для проверки коммита22
