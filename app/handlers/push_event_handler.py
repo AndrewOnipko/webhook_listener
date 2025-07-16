@@ -1,3 +1,6 @@
+from app import db
+from app.models import PushEvent
+
 class PushEventHandler:
     def __init__(self, email_service):
         self.email_service = email_service
@@ -12,3 +15,11 @@ class PushEventHandler:
         body = f"Сообщение: {commit_msg}\nСсылка: {commit_url}"
 
         self.email_service.send_email(subject, body, "nekoc528@gmail.com")
+        event = PushEvent(
+            repository=repo_name,
+            message=commit_msg,
+            url=commit_url
+        )
+        db.session.add(event)
+        db.session.commit()
+
