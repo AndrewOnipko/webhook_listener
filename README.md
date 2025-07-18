@@ -14,7 +14,7 @@
 
 ## Что делает проект
 
-- Принимает push-события с GitHub через webhook
+- Принимает push и merge события с GitHub через webhook
 - Отправляет email с деталями коммита
 - Сохраняет данные в SQLite
 - Показывает коммиты на дашборде (`/dashboard`)
@@ -31,6 +31,21 @@ X-Hub-Signature-256 → сравнивается с HMAC SHA-256
 
 Важно: проект работает только локально и не рассчитан на прод. Уровень безопасности минимальный и подходит только для обучающих целей.
 
+## Архитектура
+
+Проект построен по MVC + DI (Dependency Injection) с разделением ответственности:
+
+```csharp
+app/
+├── controllers/         # Роуты (webhook, dashboard)
+├── services/            # Бизнес-логика (email, обработка событий)
+├── models/              # SQLAlchemy модели
+├── templates/           # Jinja2 шаблоны
+├── static/              # CSS/JS
+├── core/
+│   └── dependencies/    # DI контейнер и интерфейсы
+```
+
 ## Как запустить
 
 1. Клонируем репозиторий:
@@ -44,12 +59,19 @@ cd webhook_listener
 
 ```ini
 SECRET_KEY=your_flask_secret_key
+
+# SMTP настройки
 MAIL_USERNAME=your_email@example.com
 MAIL_PASSWORD=your_email_password
 MAIL_SERVER=smtp.example.com
 MAIL_PORT=587
 MAIL_USE_TLS=True
+
+# Webhook-секрет
 WEBHOOK_SECRET=your_webhook_secret
+
+# Email получателя (если не задан — будет использован MAIL_USERNAME)
+NOTIFY_EMAIL=your_email@example.com
 ```
 
 3. Установка зависимостей:
@@ -80,13 +102,15 @@ lt --port 5000
 
 ## Email
 
-Письма отправляются на заданный email с содержанием:
+Письмо содержит:
 
 Название репозитория
 
 Сообщение коммита
 
-Ссылка на commit
+Ссылку на сам commit
+
+Отправляется через Flask-Mail по адресу из NOTIFY_EMAIL или MAIL_USERNAME.
 
 ## Дашборд
 
@@ -104,4 +128,6 @@ lt --port 5000
 
 ## Заметки
 
-Проект создан в обучающих целях. Он не предназначен для использования в продакшене без доработок по безопасности.
+Проект предназначен для обучения и демонстрации архитектурных принципов.
+
+Не рекомендуется использовать как есть в продакшене без доработок (безопасность, деплой, хостинг, TLS и т.п.).
