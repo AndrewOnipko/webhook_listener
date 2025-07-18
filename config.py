@@ -9,6 +9,8 @@ class Config:
     MAIL_USE_TLS = True
     MAIL_USERNAME = os.environ.get("MAIL_USERNAME") 
     MAIL_PASSWORD = os.environ.get("MAIL_PASSWORD") 
+    NOTIFY_EMAIL = os.environ.get("NOTIFY_EMAIL", os.environ.get("MAIL_USERNAME"))
+
 
     SQLALCHEMY_DATABASE_URI = f"sqlite:///{os.path.join(basedir, 'instance', 'webhook.db')}"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
