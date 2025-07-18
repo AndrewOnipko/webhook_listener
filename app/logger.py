@@ -26,20 +26,20 @@ logger = logging.getLogger("main_logger")
 def simple_logger(func):
         if asyncio.iscoroutinefunction(func):
             @wraps(func)
-            async def async_wrapper(self, *args, **kwargs):
+            async def async_wrapper(*args, **kwargs):
                 logger.debug(f'Запускаем функцию {func.__name__}()')
                 try:
-                    return await func(self, *args, **kwargs)
+                    return await func(*args, **kwargs)
                 except Exception as e:
                     logger.exception(f"Ошибка в {func.__name__}():\n {e}")
                     raise
             return async_wrapper
         else:
             @wraps(func)
-            def sync_wrapper(self, *args, **kwargs):
+            def sync_wrapper(*args, **kwargs):
                 logger.debug(f'Запускаем функцию {func.__name__}()')
                 try:
-                    return func(self, *args, **kwargs)
+                    return func(*args, **kwargs)
                 except Exception as e:
                     logger.exception(f"Ошибка в {func.__name__}():\n {e}")
                     raise
