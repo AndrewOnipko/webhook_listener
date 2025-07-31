@@ -5,10 +5,9 @@ from app.core.dependencies.interfaces import MailProviderInterface
 
 class FlaskMailProvider(MailProviderInterface):
     def send(self, subject, body, to_email):
-        msg = Message(
-            subject=subject,
-            sender=current_app.config["MAIL_USERNAME"],
-            recipients=[to_email],
-            body=body
-        )
+        msg = Message(subject=subject,
+                    sender=current_app.config["MAIL_USERNAME"],
+                    recipients=[to_email],
+                    body=body)
+        
         mail.send(msg)
